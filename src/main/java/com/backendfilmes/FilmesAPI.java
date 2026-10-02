@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
 
 
 
@@ -32,10 +34,11 @@ public class FilmesAPI {
 		return dao.findAll();
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public Filmes inserir(@RequestBody Filmes l) {
-		dao.save(l);
-		return l;
+	public Filmes inserir(@RequestBody Filmes f) {
+		dao.save(f);
+		return f;
 	}
 	@PutMapping("{id}")
 	 public Filmes update(@PathVariable int id, @RequestBody Filmes f) {
@@ -44,12 +47,14 @@ public class FilmesAPI {
 		dao.save(f);
         return f;
     }
-	
+//	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("{id}")
     public String delete(@PathVariable int id) {
 		dao.deleteById(id);
-        return "Filmes id =" + id + " deleted successfully!";
-    }
+        return "Filmes id =" + id + " deletado com sucesso!";
+    }	
+
+//	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping
 	public String deleteAll() {
 		dao.deleteAll();
