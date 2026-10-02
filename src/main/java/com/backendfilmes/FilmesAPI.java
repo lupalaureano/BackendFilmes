@@ -48,7 +48,7 @@ public class FilmesAPI {
 	@DeleteMapping("{id}")
     public String delete(@PathVariable int id) {
 		dao.deleteById(id);
-        return "Fimes id =" + id + " deleted successfully!";
+        return "Filmes id =" + id + " deleted successfully!";
     }
 	@DeleteMapping
 	public String deleteAll() {
