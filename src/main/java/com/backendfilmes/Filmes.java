@@ -7,14 +7,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "filmes")
+//@Table(name = "filmes")
 public class Filmes {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer id;
 	public String titulo;
-	public String genero;
+	public String[] genero;
 	public Number nota;
 	public Integer ano;
 
