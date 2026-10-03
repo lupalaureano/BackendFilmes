@@ -20,7 +20,7 @@ O serviço `db` usa a imagem `postgres:16-alpine`. Nenhum Dockerfile próprio.
 
 - Credenciais: `POSTGRES_DB`, `POSTGRES_USER` e `POSTGRES_PASSWORD`, lidas do `.env`. Sem esse arquivo, os três valores caem em `filmes`.
 - Volume `pgdata` guarda os dados.
-- `db/init` é montado em `/docker-entrypoint-initdb.d` e só roda na primeira criação do volume.
+- `db/init/01-filmes.sql` cria a tabela `filmes` com as colunas da entidade: `id`, `titulo`, `genero` (`varchar(255) array`), `nota` (`bytea`) e `ano`. O script entra em `/docker-entrypoint-initdb.d` e só roda na primeira criação do volume.
 - A porta do Postgres não é publicada no host. O serviço fica na rede `filmes`.
 - O healthcheck usa `pg_isready`. O serviço `api` só inicia depois que o banco responde.
 

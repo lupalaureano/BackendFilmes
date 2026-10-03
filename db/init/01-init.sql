@@ -1,2 +1,0 @@
--- Executado apenas na primeira criação do volume do Postgres.
--- As tabelas da API são criadas pelo Hibernate.
