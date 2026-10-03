@@ -1,18 +1,16 @@
 # Backend Filmes
 
-Três serviços sobem por Docker Compose na raiz deste repositório. O projeto Spring Boot foi apenas movido para `api/`. O código da API não foi alterado.
+Três serviços sobem por Docker Compose na raiz deste repositório.
 
 ## Estrutura
 
 ```text
-api/                 projeto Maven, como estava
+api/                 Spring Boot (Java 17)
 db/init/             SQL da primeira inicialização do Postgres
-web/                 frontend novo: HTML, CSS e JavaScript
+web/                 HTML, CSS e JavaScript servidos pelo nginx
 docker-compose.yml
 .env.example
 ```
-
-Na raiz ficam a orquestração e as três pastas. `pom.xml`, `mvnw` e `src` estão em `api/`.
 
 ## Banco
 
@@ -21,8 +19,26 @@ O serviço `db` usa a imagem `postgres:16-alpine`. Nenhum Dockerfile próprio.
 - Credenciais: `POSTGRES_DB`, `POSTGRES_USER` e `POSTGRES_PASSWORD`, lidas do `.env`. Sem esse arquivo, os três valores caem em `filmes`.
 - Volume `pgdata` guarda os dados.
 - `db/init/01-filmes.sql` cria a tabela `filmes` com as colunas da entidade: `id`, `titulo`, `genero` (`varchar(255) array`), `nota` (`bytea`) e `ano`. O script entra em `/docker-entrypoint-initdb.d` e só roda na primeira criação do volume.
-- A porta do Postgres não é publicada no host. O serviço fica na rede `filmes`.
+- No host: `5433` → `5432` do container. A API no Compose usa o hostname `db` na rede `filmes`.
 - O healthcheck usa `pg_isready`. O serviço `api` só inicia depois que o banco responde.
+
+## API
+
+A API usa PostgreSQL. Em `application.properties` a URL padrão aponta para `localhost:5433`. No Compose, `SPRING_DATASOURCE_URL` sobrescreve para `jdbc:postgresql://db:5432/filmes`.
+
+`spring.jpa.hibernate.ddl-auto=validate`: o Hibernate não cria tabelas; o SQL em `db/init` define o esquema.
+
+Base: `/filmes`
+
+| Método | Caminho | Efeito |
+| --- | --- | --- |
+| `GET` | `/filmes` | lista todos |
+| `POST` | `/filmes` | cria e responde `201` |
+| `PUT` | `/filmes/{id}` | atualiza o id informado |
+| `DELETE` | `/filmes/{id}` | remove um |
+| `DELETE` | `/filmes` | remove todos |
+
+No `POST`, não envie `id`. O banco gera o valor.
 
 ## Web
 
@@ -42,8 +58,20 @@ docker compose up --build
 
 | Serviço | Publicação no host |
 | --- | --- |
-| `db` | nenhuma |
-| `api` | `5000` → porta `8080` do container |
-| `web` | `8080` → porta `80` do container |
+| `db` | `5433` → `5432` |
+| `api` | `5000` → `8080` |
+| `web` | `8080` → `80` |
 
-A aplicação dentro de `api/` continua na porta que já usava. O `5000` é só o mapeamento do Compose, sem mudança em `application.properties`.
+- Site: [http://localhost:8080](http://localhost:8080)
+- API: [http://localhost:5000/filmes](http://localhost:5000/filmes)
+
+## API sem Docker
+
+Com o Postgres do Compose no ar (`docker compose up -d db`):
+
+```bash
+cd api
+./mvnw spring-boot:run
+```
+
+A API sobe na porta `8080` e conecta em `localhost:5433`.
