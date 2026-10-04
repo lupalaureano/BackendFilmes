@@ -64,6 +64,89 @@ const atualizarFilme = (id, filme) => {
 };
 
 /* ==========================================
+   MODAL
+========================================== */
+
+const modal = document.getElementById("modal");
+const modalTitulo = document.getElementById("modalTitulo");
+const modalMensagem = document.getElementById("modalMensagem");
+const modalConfirmar = document.getElementById("modalConfirmar");
+const modalCancelar = document.getElementById("modalCancelar");
+const modalRotulo = document.getElementById("modalRotulo");
+
+let modalResolver = null;
+
+const fecharModal = (resultado = false) => {
+	if (!modal || modal.hidden) {
+		return;
+	}
+	modal.hidden = true;
+	document.body.style.overflow = "";
+	if (modalResolver) {
+		const resolver = modalResolver;
+		modalResolver = null;
+		resolver(resultado);
+	}
+};
+
+const abrirModal = ({
+	titulo,
+	mensagem,
+	rotulo = "STARLUME",
+	confirmarTexto = "OK",
+	cancelarTexto = "CANCELAR",
+	mostrarCancelar = false
+}) => {
+	return new Promise((resolve) => {
+		fecharModal(false);
+		modalResolver = resolve;
+
+		modalRotulo.textContent = rotulo;
+		modalTitulo.textContent = titulo;
+		modalMensagem.textContent = mensagem;
+		modalConfirmar.textContent = confirmarTexto;
+		modalCancelar.textContent = cancelarTexto;
+		modalCancelar.hidden = !mostrarCancelar;
+
+		modal.hidden = false;
+		document.body.style.overflow = "hidden";
+		modalConfirmar.focus();
+	});
+};
+
+const mostrarModal = (mensagem, titulo = "AVISO") =>
+	abrirModal({
+		titulo,
+		mensagem,
+		confirmarTexto: "OK",
+		mostrarCancelar: false
+	});
+
+const confirmarModal = (mensagem, titulo = "CONFIRMAR") =>
+	abrirModal({
+		titulo,
+		mensagem,
+		confirmarTexto: "CONFIRMAR",
+		cancelarTexto: "CANCELAR",
+		mostrarCancelar: true
+	});
+
+modalConfirmar.addEventListener("click", () => fecharModal(true));
+modalCancelar.addEventListener("click", () => fecharModal(false));
+
+modal.addEventListener("click", (event) => {
+	if (event.target.matches("[data-modal-fechar]")) {
+		fecharModal(false);
+	}
+});
+
+document.addEventListener("keydown", (event) => {
+	if (event.key === "Escape" && modal && !modal.hidden) {
+		fecharModal(false);
+	}
+});
+
+/* ==========================================
    STARLUME
    JAVASCRIPT
 ========================================== */
@@ -261,7 +344,7 @@ campoAno.addEventListener("input", function () {
    CADASTRAR FILME
 ========================================== */
 
-formFilme.addEventListener("submit", function (event) {
+formFilme.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
@@ -271,12 +354,12 @@ formFilme.addEventListener("submit", function (event) {
     const notaTexto = campoNota.value.trim().replace(",", ".");
 
     if (!titulo || !ano || !genero || !notaTexto) {
-        alert("Preencha todos os campos.");
+        await mostrarModal("Preencha todos os campos.", "CAMPOS OBRIGATÓRIOS");
         return;
     }
 
     if (ano.length !== 4) {
-        alert("Digite um ano válido com 4 números.");
+        await mostrarModal("Digite um ano válido com 4 números.", "ANO INVÁLIDO");
         campoAno.focus();
         return;
     }
@@ -284,7 +367,7 @@ formFilme.addEventListener("submit", function (event) {
     const anoNumerico = Number(ano);
 
     if (anoNumerico < 1888 || anoNumerico > 2100) {
-        alert("Digite um ano válido.");
+        await mostrarModal("Digite um ano válido.", "ANO INVÁLIDO");
         campoAno.focus();
         return;
     }
@@ -292,7 +375,7 @@ formFilme.addEventListener("submit", function (event) {
     const nota = Number(notaTexto);
 
     if (Number.isNaN(nota) || nota < 0 || nota > 10) {
-        alert("Digite uma nota válida entre 0 e 10.");
+        await mostrarModal("Digite uma nota válida entre 0 e 10.", "NOTA INVÁLIDA");
         campoNota.focus();
         return;
     }
@@ -321,21 +404,20 @@ formFilme.addEventListener("submit", function (event) {
         ? "Não foi possível atualizar o filme. Tente novamente."
         : "Não foi possível cadastrar o filme. Tente novamente.";
 
-    requisicao
-        .done(() => {
-            formFilme.reset();
-            limparModoEdicao();
-            carregarFilmes();
-            alert(mensagemSucesso);
-            document
-                .getElementById("filmes")
-                .scrollIntoView({
-                    behavior: "smooth"
-                });
-        })
-        .fail(() => {
-            alert(mensagemErro);
-        });
+    try {
+        await requisicao;
+        formFilme.reset();
+        limparModoEdicao();
+        carregarFilmes();
+        await mostrarModal(mensagemSucesso, "SUCESSO");
+        document
+            .getElementById("filmes")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+    } catch (erro) {
+        await mostrarModal(mensagemErro, "ERRO");
+    }
 
 });
 
@@ -364,7 +446,7 @@ function atualizarContador() {
    BOTÕES DOS FILMES
 ========================================== */
 
-document.addEventListener("click", function (event) {
+document.addEventListener("click", async function (event) {
 
 
     /* =========================
@@ -387,12 +469,11 @@ document.addEventListener("click", function (event) {
         const descricao =
             filme.querySelector(".dados-filme p").textContent;
 
+        const nota = filme.dataset.nota ?? "-";
 
-        alert(
-            `FILME\n\n` +
-            `${titulo}\n\n` +
-            `Ano: ${ano}\n` +
-            `${descricao}`
+        await mostrarModal(
+            `${titulo}\n\nAno: ${ano}\nNota: ${nota}\nGênero: ${descricao}`,
+            "DETALHES DO FILME"
         );
 
     }
@@ -414,26 +495,35 @@ document.addEventListener("click", function (event) {
             filme.querySelector("h4").textContent;
 
         if (!id) {
-            alert("Não foi possível identificar o filme para exclusão.");
+            await mostrarModal(
+                "Não foi possível identificar o filme para exclusão.",
+                "ERRO"
+            );
             return;
         }
 
-        const confirmar =
-            confirm(
-                `Deseja realmente excluir "${titulo}"?`
-            );
+        const confirmar = await confirmarModal(
+            `Deseja realmente excluir "${titulo}"?`,
+            "EXCLUIR FILME"
+        );
 
         if (!confirmar) {
             return;
         }
 
-        excluirFilme(id)
-            .done(() => {
-                carregarFilmes();
-            })
-            .fail(() => {
-                alert("Não foi possível excluir o filme. Tente novamente.");
-            });
+        try {
+            await excluirFilme(id);
+            carregarFilmes();
+            await mostrarModal(
+                `O filme "${titulo}" foi excluído.`,
+                "SUCESSO"
+            );
+        } catch (erro) {
+            await mostrarModal(
+                "Não foi possível excluir o filme. Tente novamente.",
+                "ERRO"
+            );
+        }
 
     }
 
@@ -450,7 +540,10 @@ document.addEventListener("click", function (event) {
             event.target.closest(".filme");
 
         if (!filme?.dataset.id) {
-            alert("Não foi possível identificar o filme para edição.");
+            await mostrarModal(
+                "Não foi possível identificar o filme para edição.",
+                "ERRO"
+            );
             return;
         }
 

@@ -360,6 +360,26 @@
     </footer>
 
 
+    <!-- ==================== MODAL ==================== -->
+
+    <div id="modal" class="modal" hidden>
+        <div class="modal-fundo" data-modal-fechar></div>
+        <div class="modal-caixa" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+            <small id="modalRotulo">STARLUME</small>
+            <h3 id="modalTitulo"></h3>
+            <p id="modalMensagem"></p>
+            <div class="modal-acoes">
+                <button type="button" id="modalCancelar" class="modal-botao modal-botao-secundario" hidden>
+                    CANCELAR
+                </button>
+                <button type="button" id="modalConfirmar" class="modal-botao modal-botao-principal">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     <script src="./js/app.js"></script>
     <script>
     $(() => {
