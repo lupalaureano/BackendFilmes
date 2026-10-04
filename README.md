@@ -44,10 +44,10 @@ No `POST`, não envie `id`. O banco gera o valor.
 
 O serviço `web` é um nginx. O Dockerfile copia `index.html`, `css/`, `js/` e `nginx.conf`.
 
-- No host: [http://localhost:8080](http://localhost:8080)
+- No host: [http://localhost:8081](http://localhost:8081)
 - No container: porta `80`
-- O nginx entrega os arquivos estáticos. Ainda não há proxy para a API.
-- A página em `web/` pede `GET /filmes` na mesma origem. Enquanto o proxy não existir, essa lista não é preenchida.
+- O nginx entrega os arquivos estáticos e faz proxy de `/filmes` para `http://api:8080/filmes`.
+- A página em `web/` pede `GET /filmes` na mesma origem; o nginx encaminha para a API.
 
 ## Subir
 
@@ -59,11 +59,11 @@ docker compose up --build
 | Serviço | Publicação no host |
 | --- | --- |
 | `db` | `5433` → `5432` |
-| `api` | `5000` → `8080` |
-| `web` | `8080` → `80` |
+| `api` | `5001` → `8080` |
+| `web` | `8081` → `80` |
 
-- Site: [http://localhost:8080](http://localhost:8080)
-- API: [http://localhost:5000/filmes](http://localhost:5000/filmes)
+- Site: [http://localhost:8081](http://localhost:8081)
+- API: [http://localhost:5001/filmes](http://localhost:5001/filmes)
 
 ## API sem Docker
 

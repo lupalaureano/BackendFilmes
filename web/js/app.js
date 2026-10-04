@@ -1,39 +1,67 @@
 const lista = document.querySelector("#filmes");
 
+const formatarGenero = (genero) => {
+	if (Array.isArray(genero)) {
+		return genero.join(", ");
+	}
+	return genero ?? "";
+};
+
 const carregarFilmes = () => {
-			$.ajax({
-				url: "/filmes",
-				success: (filmes) => {
-					let conteudo = "";
-					for (let f of filmes) {
-						conteudo += ` <article class="filme" data-genero="${f.genero}" data-busca="${f.titulo} ${f.nota} ${f.ano} ${f.genero}">`;
-						conteudo += `<div class="poster poster1"><div class="poster-conteudo"><small>STARLUME ORIGINAL ARCHIVE</small><h3>${f.titulo.toUpperCase} · ${f.nota}</h3><p>${f.ano} · ${f.genero.toUpperCase}</p></div></div>`
-                        conteudo += `<div class="dados-filme"><small>${f.ano}</small><h4>${f.titulo.toUpperCase} </h4><p>${f.genero}</p><div class="acoes"><button class="editar">EDITAR</button><button class="excluir">EXCLUIR</button></div></div></article>`
-					}
-					$("#listaFilmes").html(conteudo);
-				}
-			});
+	$.ajax({
+		url: "/filmes",
+		success: (filmes) => {
+			let conteudo = "";
+			for (let f of filmes) {
+				const generoTexto = formatarGenero(f.genero);
+				const generoData = Array.isArray(f.genero)
+					? f.genero.join(" ").toLowerCase()
+					: String(f.genero ?? "").toLowerCase();
+				const titulo = f.titulo ?? "";
+				const busca = `${titulo} ${f.nota} ${f.ano} ${generoTexto}`.toLowerCase();
+
+				conteudo += `<article class="filme" data-id="${f.id}" data-genero="${generoData}" data-nota="${f.nota}" data-busca="${busca}">`;
+				conteudo += `<div class="poster poster1"><div class="poster-conteudo"><small>STARLUME ORIGINAL ARCHIVE</small><h3>${titulo.toUpperCase()} · ${f.nota}</h3><p>${f.ano} · ${generoTexto.toUpperCase()}</p></div></div>`;
+				conteudo += `<div class="dados-filme"><small>${f.ano}</small><h4>${titulo}</h4><p>${generoTexto}</p><div class="acoes"><button class="detalhes">DETALHES</button><button class="editar">EDITAR</button><button class="excluir">EXCLUIR</button></div></div></article>`;
+			}
+			$("#listaFilmes").html(conteudo);
+			atualizarContador();
+			filtrarFilmes(generoSelecionado === "todos" ? "todos" : generoSelecionado);
+		},
+		error: () => {
+			console.error("Não foi possível carregar os filmes da API.");
 		}
+	});
+};
         
 		
     
-const incluirFilme = () => {
-			titulo = $("#titulo").val();
-            genero = $("#genero").val().trim().split();
-			nota = Number($("#nota").val());
-            ano = Number($("#ano").val());
-			dados = JSON.stringify({id: null, titulo: titulo, genero: genero, nota: nota, ano: ano});
-			$.ajax({
-				url: "/filmes", type: "POST",
-				data: dados,
-				dataType: "json",
-				contentType: "application/json",
-				success: (data) => {
-					console.log(data);
-					carregarFilmes();
-				}
-			});
-		}
+const incluirFilme = (filme) => {
+	return $.ajax({
+		url: "/filmes",
+		type: "POST",
+		data: JSON.stringify(filme),
+		dataType: "json",
+		contentType: "application/json"
+	});
+};
+
+const excluirFilme = (id) => {
+	return $.ajax({
+		url: `/filmes/${id}`,
+		type: "DELETE"
+	});
+};
+
+const atualizarFilme = (id, filme) => {
+	return $.ajax({
+		url: `/filmes/${id}`,
+		type: "PUT",
+		data: JSON.stringify(filme),
+		dataType: "json",
+		contentType: "application/json"
+	});
+};
 
 /* ==========================================
    STARLUME
@@ -46,14 +74,50 @@ const incluirFilme = () => {
 
 const campoBusca = document.getElementById("campoBusca");
 const categorias = document.querySelectorAll(".categoria");
-const filmes = document.querySelectorAll(".filme");
 const contadorResultados = document.getElementById("contadorResultados");
 const formFilme = document.getElementById("formFilme");
 const campoTitulo = document.getElementById("titulo");
 const campoAno = document.getElementById("ano");
 const campoGenero = document.getElementById("genero");
+const campoNota = document.getElementById("nota");
 const listaFilmes = document.getElementById("listaFilmes");
 const contadorFilmes = document.querySelector(".contador-filmes");
+const tituloFormulario = document.querySelector("#cadastro h2");
+const botaoFormulario = document.getElementById("btn_incluir");
+
+let filmeEmEdicao = null;
+
+const limparModoEdicao = () => {
+	filmeEmEdicao = null;
+	if (tituloFormulario) {
+		tituloFormulario.textContent = "CADASTRAR FILME";
+	}
+	if (botaoFormulario) {
+		botaoFormulario.textContent = "CADASTRAR FILME";
+	}
+};
+
+const entrarModoEdicao = (filme) => {
+	filmeEmEdicao = filme.dataset.id;
+	campoTitulo.value = filme.querySelector("h4").textContent.trim();
+	campoAno.value = filme.querySelector(".dados-filme > small").textContent.trim();
+	campoGenero.value = filme.querySelector(".dados-filme p").textContent.trim();
+	campoNota.value = filme.dataset.nota ?? "";
+
+	if (tituloFormulario) {
+		tituloFormulario.textContent = "EDITAR FILME";
+	}
+	if (botaoFormulario) {
+		botaoFormulario.textContent = "SALVAR ALTERAÇÕES";
+	}
+
+	document
+		.getElementById("cadastro")
+		.scrollIntoView({
+			behavior: "smooth"
+		});
+	campoTitulo.focus();
+};
 
 
 /* ==========================================
@@ -62,46 +126,45 @@ const contadorFilmes = document.querySelector(".contador-filmes");
 
 let generoSelecionado = "todos";
 
+const normalizarTexto = (texto) =>
+	String(texto ?? "")
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase()
+		.trim();
+
 
 /* ==========================================
    BUSCA DE FILMES
 ========================================== */
 
 function filtrarFilmes(busca) {
-    const textoBusca = busca
-        .toLowerCase()
-        .trim();
-    console.log(textoBusca);
-    let quantidadeVisivel = 0;
+	const textoBusca = normalizarTexto(busca);
+	let quantidadeVisivel = 0;
+	const filmes = document.querySelectorAll(".filme");
 
-    filmes.forEach(function (filme) {
-            const genero = filme.dataset.genero;
-            const texto = filme.dataset.busca;
+	filmes.forEach(function (filme) {
+		const genero = normalizarTexto(filme.dataset.genero);
+		const texto = normalizarTexto(filme.dataset.busca);
+		let visivel = false;
 
-            if(textoBusca != "todos"){
+		if (!textoBusca || textoBusca === "todos") {
+			visivel = true;
+		} else if (generoSelecionado !== "todos" && textoBusca === normalizarTexto(generoSelecionado)) {
+			visivel = genero.split(/\s+/).includes(textoBusca);
+		} else {
+			visivel = texto.includes(textoBusca);
+		}
 
+		filme.style.display = visivel ? "flex" : "none";
+		if (visivel) {
+			quantidadeVisivel++;
+		}
+	});
 
-                if (genero == textoBusca) {
-
-                    filme.style.display = "flex";
-
-                    quantidadeVisivel++;
-
-                } else {
-
-                    filme.style.display = "none";
-
-                }
-            }else
-        filme.style.display = 'flex';
-    }
-    );
-
-
-    contadorResultados.textContent =
-        String(quantidadeVisivel).padStart(2, "0") +
-        " TÍTULOS ENCONTRADOS";
-
+	contadorResultados.textContent =
+		String(quantidadeVisivel).padStart(2, "0") +
+		" TÍTULOS ENCONTRADOS";
 }
 
 
@@ -202,172 +265,76 @@ formFilme.addEventListener("submit", function (event) {
 
     event.preventDefault();
 
+    const titulo = campoTitulo.value.trim();
+    const ano = campoAno.value.trim();
+    const genero = campoGenero.value.trim();
+    const notaTexto = campoNota.value.trim().replace(",", ".");
 
-    const titulo =
-        campoTitulo.value.trim();
-    const ano =
-        campoAno.value.trim();
-    const genero =
-        campoGenero.value.trim();
-
-
-    /* =========================
-       VALIDAÇÕES
-    ========================= */
-
-    if (!titulo || !ano || !genero) {
-
+    if (!titulo || !ano || !genero || !notaTexto) {
         alert("Preencha todos os campos.");
-
         return;
-
     }
-
 
     if (ano.length !== 4) {
-
         alert("Digite um ano válido com 4 números.");
-
         campoAno.focus();
-
         return;
-
     }
 
+    const anoNumerico = Number(ano);
 
-    const anoNumerico =
-        Number(ano);
-
-
-    if (
-        anoNumerico < 1888 ||
-        anoNumerico > 2100
-    ) {
-
+    if (anoNumerico < 1888 || anoNumerico > 2100) {
         alert("Digite um ano válido.");
-
         campoAno.focus();
-
         return;
-
     }
 
+    const nota = Number(notaTexto);
 
-    /* ==========================================
-       CRIAR NOVO FILME
-    ========================================== */
+    if (Number.isNaN(nota) || nota < 0 || nota > 10) {
+        alert("Digite uma nota válida entre 0 e 10.");
+        campoNota.focus();
+        return;
+    }
 
-    const novoFilme =
-        document.createElement("article");
+    const generos = genero
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
 
+    const filme = {
+        titulo: titulo,
+        genero: generos,
+        nota: nota,
+        ano: anoNumerico
+    };
 
-    novoFilme.classList.add("filme");
+    const requisicao = filmeEmEdicao
+        ? atualizarFilme(filmeEmEdicao, filme)
+        : incluirFilme(filme);
 
+    const mensagemSucesso = filmeEmEdicao
+        ? `O filme "${titulo}" foi atualizado com sucesso!`
+        : `O filme "${titulo}" foi cadastrado com sucesso!`;
 
-    const generoNormalizado =
-        genero.toLowerCase();
+    const mensagemErro = filmeEmEdicao
+        ? "Não foi possível atualizar o filme. Tente novamente."
+        : "Não foi possível cadastrar o filme. Tente novamente.";
 
-
-    novoFilme.dataset.genero =
-        generoNormalizado;
-
-
-    novoFilme.dataset.busca =
-        `${titulo} ${ano} ${genero}`.toLowerCase();
-
-
-    novoFilme.innerHTML = `
-
-        <div class="poster poster1">
-
-            <div class="poster-conteudo">
-
-                <small>
-                    STARLUME ORIGINAL ARCHIVE
-                </small>
-
-                <h3>
-                    ${titulo.toUpperCase()}
-                </h3>
-
-                <p>
-                    ${ano} · ${genero.toUpperCase()}
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div class="dados-filme">
-
-            <small>
-                ${ano}
-            </small>
-
-            <h4>
-                ${titulo}
-            </h4>
-
-            <p>
-                ${genero}
-            </p>
-
-            <div class="acoes">
-
-                <button class="detalhes">
-                    DETALHES
-                </button>
-
-                <button class="editar">
-                    EDITAR
-                </button>
-
-                <button class="excluir">
-                    EXCLUIR
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    listaFilmes.appendChild(novoFilme);
-
-
-    /* ==========================================
-       ATUALIZAR CONTADOR
-    ========================================== */
-
-    atualizarContador();
-
-
-    /* ==========================================
-       LIMPAR FORMULÁRIO
-    ========================================== */
-
-    formFilme.reset();
-
-
-    /* ==========================================
-       MENSAGEM
-    ========================================== */
-
-    alert(
-        `O filme "${titulo}" foi cadastrado com sucesso!`
-    );
-
-
-    /* ==========================================
-       VOLTAR PARA O CATÁLOGO
-    ========================================== */
-
-    document
-        .getElementById("filmes")
-        .scrollIntoView({
-            behavior: "smooth"
+    requisicao
+        .done(() => {
+            formFilme.reset();
+            limparModoEdicao();
+            carregarFilmes();
+            alert(mensagemSucesso);
+            document
+                .getElementById("filmes")
+                .scrollIntoView({
+                    behavior: "smooth"
+                });
+        })
+        .fail(() => {
+            alert(mensagemErro);
         });
 
 });
@@ -442,25 +409,31 @@ document.addEventListener("click", function (event) {
         const filme =
             event.target.closest(".filme");
 
+        const id = filme.dataset.id;
         const titulo =
             filme.querySelector("h4").textContent;
 
+        if (!id) {
+            alert("Não foi possível identificar o filme para exclusão.");
+            return;
+        }
 
         const confirmar =
             confirm(
                 `Deseja realmente excluir "${titulo}"?`
             );
 
-
-        if (confirmar) {
-
-            filme.remove();
-
-            atualizarContador();
-
-            filtrarFilmes();
-
+        if (!confirmar) {
+            return;
         }
+
+        excluirFilme(id)
+            .done(() => {
+                carregarFilmes();
+            })
+            .fail(() => {
+                alert("Não foi possível excluir o filme. Tente novamente.");
+            });
 
     }
 
@@ -476,13 +449,12 @@ document.addEventListener("click", function (event) {
         const filme =
             event.target.closest(".filme");
 
-        const titulo =
-            filme.querySelector("h4").textContent;
+        if (!filme?.dataset.id) {
+            alert("Não foi possível identificar o filme para edição.");
+            return;
+        }
 
-        alert(
-            `Área de edição de "${titulo}".\n\n` +
-            `A funcionalidade de edição pode ser conectada posteriormente ao banco de dados.`
-        );
+        entrarModoEdicao(filme);
 
     }
 
