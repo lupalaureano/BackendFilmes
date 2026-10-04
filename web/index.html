@@ -1,17 +1,376 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filmes</title>
+    <title>STARLUME</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
+
 <body>
+
+    <!-- ==================== MENU ==================== -->
+
+    <header>
+
+        <div class="logo">
+            ✦ <span>STAR</span>LUME
+        </div>
+
+        <nav>
+            <a href="#inicio" class="ativo">INÍCIO</a>
+            <a href="#filmes">FILMES</a>
+            <a href="#estrelas">ESTRELAS</a>
+            <a href="#sobre">SOBRE</a>
+        </nav>
+
+        <a href="#cadastro" class="novo-filme">
+            + NOVO FILME
+        </a>
+
+    </header>
+
+
     <main>
-        <h1>Filmes</h1>
-        <p>Serviço web.</p>
-        <ul id="filmes"></ul>
+        <!-- ==================== INÍCIO ==================== -->
+
+        <section id="inicio" class="hero">
+
+            <div class="hero-conteudo">
+
+                <div class="linha-titulo">
+                    <div></div>
+                    <span>THE GOLDEN ERA OF CINEMA</span>
+                </div>
+
+                <h1>
+                    <span>STAR</span>LUME
+                </h1>
+
+                <h2>
+                    GRANDES HISTÓRIAS.<br>
+                    <span>GRANDES ESTRELAS.</span>
+                </h2>
+
+                <p>
+                    Um acervo cinematográfico dedicado aos filmes,
+                    personagens e estrelas que atravessaram gerações.
+                </p>
+
+                <div class="botoes">
+
+                    <a href="#filmes" class="botao-principal">
+                        EXPLORAR O ACERVO ↗
+                    </a>
+
+                    <a href="#cadastro" class="botao-secundario">
+                        + CADASTRAR FILME
+                    </a>
+
+                </div>
+
+
+                <div class="informacoes">
+
+                    <div>
+                        <strong class="contador-filmes">08</strong>
+                        <small>FILMES</small>
+                    </div>
+
+                    <div>
+                        <strong>14+</strong>
+                        <small>ESTRELAS</small>
+                    </div>
+
+                    <div>
+                        <strong>80s–90s</strong>
+                        <small>ERA</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="scroll">
+                SCROLL<br>
+                ↓
+            </div>
+
+        </section>
+
+
+        <!-- ==================== FAIXA ==================== -->
+
+        <div class="faixa">
+
+            <span>STARLUME</span>
+            <b>✦</b>
+
+            <span>CINEMA ARCHIVE</span>
+            <b>✦</b>
+
+            <span>THE GOLDEN ERA</span>
+            <b>✦</b>
+
+            <span>STARLUME</span>
+            <b>✦</b>
+
+            <span>CINEMA ARCHIVE</span>
+
+        </div>
+
+
+        <!-- ==================== FILMES ==================== -->
+
+        <section id="filmes" class="filmes">
+
+            <div class="titulo-secao">
+
+                <div>
+
+                    <small>THE ARCHIVE</small>
+
+                    <h2>
+                        FILMES EM DESTAQUE
+                    </h2>
+
+                </div>
+
+                <p>
+                    Explore o catálogo por título, ano ou gênero.
+                </p>
+
+            </div>
+
+
+            <!-- BUSCA -->
+
+            <div class="busca">
+
+                <div class="campo-busca">
+
+                    <span>⌕</span>
+
+                    <input type="text" id="campoBusca" placeholder="Buscar título, ano, gênero">
+
+                    <small>⌘ K</small>
+
+                </div>
+
+
+                <div class="categorias">
+
+                    <button class="categoria categoria-ativa" data-genero="todos">
+                        TODOS
+                    </button>
+
+                    <button class="categoria" data-genero="ação">
+                        AÇÃO
+                    </button>
+
+                    <button class="categoria" data-genero="comédia">
+                        COMÉDIA
+                    </button>
+
+                    <button class="categoria" data-genero="drama">
+                        DRAMA
+                    </button>
+
+                    <button class="categoria" data-genero="romance">
+                        ROMANCE
+                    </button>
+
+                    <button class="categoria" data-genero="musical">
+                        MUSICAL
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="informacao-filmes">
+
+                <span id="contadorResultados">
+                    08 TÍTULOS ENCONTRADOS
+                </span>
+
+                <span>
+                    ORDENADO POR <b>DESTAQUE</b>
+                </span>
+
+            </div>
+
+
+            <!-- LISTA DE FILMES -->
+
+            <div class="lista-filmes" id="listaFilmes">
+            </div>
+
+            <!-- ==================== ESTRELAS ==================== -->
+
+            <section id="estrelas" class="estrelas">
+
+                <small>
+                    THE STARS
+                </small>
+
+                <h2>
+                    ESTRELAS DO CINEMA
+                </h2>
+
+
+                <div class="lista-estrelas">
+
+                    <p>Tom Cruise</p>
+
+                    <p>Michael J. Fox</p>
+
+                    <p>Patrick Swayze</p>
+
+                    <p>Richard Gere</p>
+
+                    <p>Harrison Ford</p>
+
+                    <p>Eddie Murphy</p>
+
+                    <p>Sylvester Stallone</p>
+
+                    <p>Arnold Schwarzenegger</p>
+
+                </div>
+
+
+                <p class="outras-estrelas">
+                    E OUTRAS ESTRELAS DO CINEMA...
+                </p>
+
+            </section>
+
+
+            <!-- ==================== SOBRE ==================== -->
+
+            <section id="sobre" class="sobre">
+
+                <small>
+                    ABOUT
+                </small>
+
+                <h2>
+                    SOBRE A STARLUME
+                </h2>
+
+                <p>
+                    A STARLUME é uma plataforma dedicada ao cinema,
+                    criada para cadastrar, organizar e consultar informações
+                    sobre filmes que marcaram diferentes gerações.
+                </p>
+
+            </section>
+
+
+            <!-- ==================== CADASTRO ==================== -->
+
+            <section id="cadastro" class="cadastro">
+
+                <small>
+                    NEW FILM
+                </small>
+
+                <h2>
+                    CADASTRAR FILME
+                </h2>
+
+
+                <form id="formFilme">
+
+                    <label for="titulo">
+                        Título do filme
+                    </label>
+
+                    <input type="text" id="titulo" placeholder="Digite o título" required>
+
+
+                    <label for="ano">
+                        Ano
+                    </label>
+
+                    <!--
+                    O campo foi alterado para TEXT.
+                    Assim você pode digitar o ano manualmente,
+                    sem as setinhas do input number.
+                -->
+
+                    <input type="text" id="ano" placeholder="Ex: 1986" maxlength="4" inputmode="numeric" required>
+
+
+                    <label for="genero">
+                        Gênero
+                    </label>
+
+                    <input type="text" id="genero" placeholder="Ex: Ação" required>
+
+                    <label for="nota">
+                        nota
+                    </label>
+
+                    <!--
+                    O campo foi alterado para TEXT.
+                    Assim você pode digitar o ano manualmente,
+                    sem as setinhas do input number.
+                -->
+
+                    <input type="float" id="nota" placeholder="Ex: 9.9" maxlength="3" inputmode="numeric" step="0.1" min="0" required>
+
+
+                    <button type="submit" id="btn_incluir">
+                        CADASTRAR FILME
+                    </button>
+
+
+                </form>
+
+            </section>
+
     </main>
-    <script src="js/app.js"></script>
+
+
+    <!-- ==================== RODAPÉ ==================== -->
+
+    <footer>
+
+        <div class="logo">
+            ✦ <span>STAR</span>LUME
+        </div>
+
+        <p>
+            STARLUME © 2026 · CINEMA ARCHIVE
+        </p>
+
+    </footer>
+
+
+    <script src="./js/app.js"></script>
+    <script>
+    $(() => {
+            carregarFilmes();
+            $("#btn_incluir").on("click", incluirFilme);
+            
+        })
+        </script>
+
+
+
 </body>
+
 </html>

@@ -1,20 +1,1068 @@
-body {
+CSS 
+
+/* ================================
+   RESET
+================================ */
+
+* {
     margin: 0;
-    font-family: system-ui, sans-serif;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #0b0a08;
+    color: #f2eee6;
+    font-family: "Inter", sans-serif;
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+
+/* ================================
+   CORES
+================================ */
+
+:root {
+    --preto: #0b0a08;
+    --preto-2: #12100d;
+    --preto-3: #191612;
+    --dourado: #c8a15a;
+    --dourado-claro: #e1c27d;
+    --branco: #f2eee6;
+    --cinza: #a8a39a;
+    --borda: rgba(200, 161, 90, 0.25);
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+header {
+    width: 100%;
+    height: 82px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 6%;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    background: rgba(11, 10, 8, 0.94);
+    backdrop-filter: blur(14px);
+}
+
+.logo {
+    font-family: "Cinzel", serif;
+    font-size: 19px;
+    letter-spacing: 2px;
+    color: var(--branco);
+}
+
+.logo span {
+    color: var(--dourado);
+}
+
+.logo:first-letter {
+    color: var(--dourado);
+}
+
+nav {
+    display: flex;
+    gap: 34px;
+}
+
+nav a {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #a7a29a;
+    transition: 0.3s;
+}
+
+nav a:hover,
+nav a.ativo {
+    color: var(--dourado);
+}
+
+.novo-filme {
+    border: 1px solid var(--dourado);
+    padding: 12px 18px;
+
+    font-size: 10px;
+    letter-spacing: 1.5px;
+
+    color: var(--dourado);
+
+    transition: 0.3s;
+}
+
+.novo-filme:hover {
+    background: var(--dourado);
+    color: var(--preto);
+}
+
+
+/* ================================
+   HERO
+================================ */
+
+.hero {
+    min-height: 780px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 100px 9%;
+
+    position: relative;
+
+    background:
+        radial-gradient(circle at 75% 45%, rgba(200, 161, 90, 0.13), transparent 25%),
+        linear-gradient(120deg, #0b0a08, #15120e 70%, #0c0b09);
+}
+
+.hero::after {
+    content: "✦";
+
+    position: absolute;
+
+    right: 10%;
+    top: 27%;
+
+    font-size: 250px;
+
+    color: rgba(200, 161, 90, 0.035);
+
+    font-family: serif;
+}
+
+.hero-conteudo {
+    max-width: 850px;
+    position: relative;
+    z-index: 2;
+}
+
+.linha-titulo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    margin-bottom: 28px;
+}
+
+.linha-titulo div {
+    width: 45px;
+    height: 1px;
+    background: var(--dourado);
+}
+
+.linha-titulo span {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--dourado);
+}
+
+.hero h1 {
+    font-family: "Cinzel", serif;
+    font-size: clamp(65px, 10vw, 150px);
+    font-weight: 500;
+
+    line-height: 0.9;
+
+    letter-spacing: -5px;
+
+    margin-bottom: 45px;
+}
+
+.hero h1 span {
+    color: var(--dourado);
+}
+
+.hero h2 {
+    font-family: "Cinzel", serif;
+
+    font-size: clamp(28px, 4vw, 55px);
+
+    font-weight: 400;
+
+    line-height: 1.15;
+
+    margin-bottom: 25px;
+}
+
+.hero h2 span {
+    color: var(--dourado);
+}
+
+.hero p {
+    max-width: 570px;
+
+    color: var(--cinza);
+
+    font-size: 14px;
+
+    line-height: 1.8;
+
+    margin-bottom: 35px;
+}
+
+.botoes {
+    display: flex;
+    gap: 15px;
+
+    flex-wrap: wrap;
+}
+
+.botao-principal,
+.botao-secundario {
+    padding: 15px 23px;
+
+    font-size: 10px;
+
+    letter-spacing: 1.7px;
+
+    transition: 0.3s;
+}
+
+.botao-principal {
+    background: var(--dourado);
+    color: var(--preto);
+}
+
+.botao-principal:hover {
+    background: var(--dourado-claro);
+    transform: translateY(-2px);
+}
+
+.botao-secundario {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--branco);
+}
+
+.botao-secundario:hover {
+    border-color: var(--dourado);
+    color: var(--dourado);
+}
+
+.informacoes {
+    display: flex;
+
+    gap: 55px;
+
+    margin-top: 75px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    max-width: 500px;
+}
+
+.informacoes div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.informacoes strong {
+    font-family: "Cinzel", serif;
+    font-size: 25px;
+    font-weight: 500;
+    color: var(--dourado);
+}
+
+.informacoes small {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #77736c;
+}
+
+.scroll {
+    position: absolute;
+
+    right: 6%;
+    bottom: 55px;
+
+    font-size: 9px;
+
+    line-height: 2;
+
+    text-align: center;
+
+    letter-spacing: 3px;
+
+    color: #77736c;
+}
+
+
+/* ================================
+   FAIXA
+================================ */
+
+.faixa {
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 32px;
+
+    overflow: hidden;
+
+    border-top: 1px solid var(--borda);
+    border-bottom: 1px solid var(--borda);
+
+    background: #11100d;
+
+    white-space: nowrap;
+}
+
+.faixa span {
+    font-family: "Cinzel", serif;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    color: #b9b3a8;
+}
+
+.faixa b {
+    color: var(--dourado);
+}
+
+
+/* ================================
+   SEÇÃO FILMES
+================================ */
+
+.filmes {
+    padding: 120px 8%;
+    background: var(--preto);
+}
+
+.titulo-secao {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+
+    gap: 40px;
+
+    margin-bottom: 55px;
+}
+
+.titulo-secao small,
+.estrelas > small,
+.sobre > small,
+.cadastro > small {
+    color: var(--dourado);
+
+    font-size: 9px;
+
+    letter-spacing: 4px;
+}
+
+.titulo-secao h2,
+.estrelas h2,
+.sobre h2,
+.cadastro h2 {
+    font-family: "Cinzel", serif;
+
+    font-size: clamp(30px, 4vw, 55px);
+
+    font-weight: 400;
+
+    margin-top: 13px;
+}
+
+.titulo-secao p {
+    max-width: 350px;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+
+    color: var(--cinza);
+}
+
+
+/* ================================
+   BUSCA
+================================ */
+
+.busca {
+    margin-bottom: 30px;
+}
+
+.campo-busca {
+    height: 55px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 18px;
+
+    background: #11100d;
+}
+
+.campo-busca > span {
+    font-size: 25px;
+    color: var(--dourado);
+
+    margin-right: 12px;
+}
+
+.campo-busca input {
+    flex: 1;
+
+    background: transparent;
+
+    border: none;
+    outline: none;
+
+    color: white;
+
+    font-size: 13px;
+}
+
+.campo-busca input::placeholder {
+    color: #68645d;
+}
+
+.campo-busca small {
+    color: #66615a;
+    font-size: 9px;
+}
+
+.categorias {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 15px;
+
+    flex-wrap: wrap;
+}
+
+.categoria {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    background: transparent;
+
+    color: #8d8981;
+
+    padding: 10px 16px;
+
+    font-size: 9px;
+
+    letter-spacing: 1.5px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.categoria:hover,
+.categoria-ativa {
+    background: var(--dourado);
+    color: var(--preto);
+
+    border-color: var(--dourado);
+}
+
+
+/* ================================
+   INFORMAÇÃO DOS FILMES
+================================ */
+
+.informacao-filmes {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 20px 0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    color: #69655e;
+
+    font-size: 9px;
+
+    letter-spacing: 1.5px;
+}
+
+.informacao-filmes b {
+    color: var(--dourado);
+}
+
+
+/* ================================
+   LISTA DE FILMES
+================================ */
+
+.lista-filmes {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 35px;
+
+    margin-top: 35px;
+}
+
+.filme {
+    display: grid;
+
+    grid-template-columns: 210px 1fr;
+
+    min-height: 280px;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+
+    background: #11100d;
+
+    transition: 0.35s;
+
+    overflow: hidden;
+}
+
+.filme:hover {
+    border-color: rgba(200, 161, 90, 0.5);
+
+    transform: translateY(-5px);
+}
+
+.poster {
+    min-height: 280px;
+
+    display: flex;
+    align-items: end;
+
+    padding: 22px;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.poster::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.85),
+            rgba(0, 0, 0, 0.1)
+        );
+}
+
+.poster-conteudo {
+    position: relative;
+
+    z-index: 2;
+}
+
+.poster-conteudo small {
+    font-size: 7px;
+
+    letter-spacing: 1.5px;
+
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.poster-conteudo h3 {
+    font-family: "Cinzel", serif;
+
+    font-size: 22px;
+
+    line-height: 1;
+
+    margin: 10px 0;
+
+    color: white;
+}
+
+.poster-conteudo p {
+    font-size: 8px;
+
+    letter-spacing: 1.5px;
+
+    color: var(--dourado);
+}
+
+
+/* POSTERS */
+
+.poster1 {
+    background:
+        radial-gradient(circle at 70% 25%, #806e45, transparent 25%),
+        linear-gradient(135deg, #111, #453b27);
+}
+
+.poster2 {
+    background:
+        radial-gradient(circle at 30% 30%, #a57d42, transparent 20%),
+        linear-gradient(135deg, #191d28, #694d30);
+}
+
+.poster3 {
+    background:
+        radial-gradient(circle at 60% 35%, #a66b50, transparent 25%),
+        linear-gradient(135deg, #261718, #604535);
+}
+
+.poster4 {
+    background:
+        radial-gradient(circle at 40% 30%, #b68d62, transparent 25%),
+        linear-gradient(135deg, #24201b, #765238);
+}
+
+.poster5 {
+    background:
+        radial-gradient(circle at 65% 20%, #9c392d, transparent 23%),
+        linear-gradient(135deg, #201412, #55251e);
+}
+
+.poster6 {
+    background:
+        radial-gradient(circle at 40% 30%, #a45d3c, transparent 25%),
+        linear-gradient(135deg, #171313, #4c2921);
+}
+
+.poster7 {
+    background:
+        radial-gradient(circle at 60% 30%, #c78c45, transparent 25%),
+        linear-gradient(135deg, #1b1720, #5d4030);
+}
+
+.poster8 {
+    background:
+        radial-gradient(circle at 45% 25%, #66766c, transparent 25%),
+        linear-gradient(135deg, #111616, #33443f);
+}
+
+
+/* ================================
+   DADOS DO FILME
+================================ */
+
+.dados-filme {
+    padding: 28px 24px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.dados-filme > small {
+    color: var(--dourado);
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+}
+
+.dados-filme h4 {
+    font-family: "Cinzel", serif;
+
+    font-size: 17px;
+
+    font-weight: 500;
+
+    line-height: 1.3;
+
+    margin-top: 13px;
+}
+
+.dados-filme p {
+    font-size: 10px;
+
+    color: #77736c;
+
+    margin-top: 8px;
+
     line-height: 1.5;
 }
 
-main {
-    max-width: 40rem;
-    margin: 0 auto;
-    padding: 2rem 1.25rem;
+.acoes {
+    display: flex;
+
+    gap: 6px;
+
+    margin-top: auto;
 }
 
-h1 {
-    margin: 0 0 0.5rem;
-    font-size: 1.75rem;
+.acoes button {
+    background: transparent;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    color: #77736c;
+
+    padding: 8px 9px;
+
+    font-size: 7px;
+
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
 }
 
-ul {
-    padding-left: 1.25rem;
+.acoes button:hover {
+    color: var(--dourado);
+
+    border-color: var(--dourado);
+}
+
+
+/* ================================
+   ESTRELAS
+================================ */
+
+.estrelas {
+    padding: 120px 8%;
+
+    background:
+        radial-gradient(circle at center, rgba(200, 161, 90, 0.08), transparent 45%),
+        #11100d;
+
+    text-align: center;
+}
+
+.estrelas h2 {
+    margin-bottom: 65px;
+}
+
+.lista-estrelas {
+    max-width: 900px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lista-estrelas p {
+    padding: 30px 15px;
+
+    font-family: "Cinzel", serif;
+
+    font-size: 14px;
+
+    color: #c3beb4;
+
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    transition: 0.3s;
+}
+
+.lista-estrelas p:hover {
+    color: var(--dourado);
+
+    background: rgba(200, 161, 90, 0.04);
+}
+
+.outras-estrelas {
+    margin-top: 40px;
+
+    color: #69655e;
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+}
+
+
+/* ================================
+   SOBRE
+================================ */
+
+.sobre {
+    padding: 120px 15%;
+
+    background: var(--preto);
+
+    text-align: center;
+}
+
+.sobre h2 {
+    margin-bottom: 30px;
+}
+
+.sobre p {
+    max-width: 700px;
+
+    margin: auto;
+
+    color: #99948b;
+
+    font-size: 14px;
+
+    line-height: 2;
+}
+
+
+/* ================================
+   CADASTRO
+================================ */
+
+.cadastro {
+    padding: 120px 8%;
+
+    background: #11100d;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.cadastro h2 {
+    margin-bottom: 55px;
+}
+
+#formFilme {
+    width: 100%;
+    max-width: 650px;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+#formFilme label {
+    margin-bottom: 9px;
+
+    color: #aaa59c;
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+#formFilme input {
+    width: 100%;
+
+    height: 52px;
+
+    margin-bottom: 25px;
+
+    padding: 0 16px;
+
+    background: #0c0b09;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    outline: none;
+
+    color: white;
+
+    font-size: 13px;
+
+    transition: 0.3s;
+}
+
+#formFilme input:focus {
+    border-color: var(--dourado);
+
+    box-shadow: 0 0 0 2px rgba(200, 161, 90, 0.06);
+}
+
+#formFilme input::placeholder {
+    color: #55514b;
+}
+
+#formFilme button {
+    height: 55px;
+
+    margin-top: 10px;
+
+    border: none;
+
+    background: var(--dourado);
+
+    color: var(--preto);
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+#formFilme button:hover {
+    background: var(--dourado-claro);
+
+    transform: translateY(-2px);
+}
+
+
+/* ================================
+   FOOTER
+================================ */
+
+footer {
+    min-height: 120px;
+
+    padding: 40px 8%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    background: #090806;
+}
+
+footer p {
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    color: #5e5a54;
+}
+
+
+/* ================================
+   RESPONSIVIDADE
+================================ */
+
+@media (max-width: 1000px) {
+
+    nav {
+        gap: 15px;
+    }
+
+    .lista-filmes {
+        grid-template-columns: 1fr;
+    }
+
+    .lista-estrelas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    header {
+        height: auto;
+
+        padding: 20px;
+
+        flex-wrap: wrap;
+
+        gap: 20px;
+    }
+
+    nav {
+        order: 3;
+
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .novo-filme {
+        display: none;
+    }
+
+    .hero {
+        min-height: 700px;
+
+        padding: 80px 7%;
+    }
+
+    .hero h1 {
+        font-size: 70px;
+
+        letter-spacing: -3px;
+    }
+
+    .hero h2 {
+        font-size: 30px;
+    }
+
+    .scroll {
+        display: none;
+    }
+
+    .titulo-secao {
+        flex-direction: column;
+
+        align-items: start;
+    }
+
+    .filmes,
+    .estrelas,
+    .sobre,
+    .cadastro {
+        padding: 80px 7%;
+    }
+
+    .filme {
+        grid-template-columns: 1fr;
+    }
+
+    .poster {
+        min-height: 330px;
+    }
+
+    .informacao-filmes {
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .lista-estrelas {
+        grid-template-columns: 1fr;
+    }
+
+    footer {
+        flex-direction: column;
+
+        gap: 20px;
+
+        text-align: center;
+    }
 }
